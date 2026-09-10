@@ -64,7 +64,7 @@ bukkit {
 
     main = "com.github.sirblobman.combatlogx.CombatPlugin"
     version = pluginVersion
-    apiVersion = "1.13"
+    apiVersion = "1.21"
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
 
     foliaSupported = true
@@ -183,7 +183,7 @@ paper {
 
     main = "com.github.sirblobman.combatlogx.CombatPlugin"
     version = pluginVersion
-    apiVersion = "1.19"
+    apiVersion = "1.21"
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
 
     hasOpenClassloader = true

@@ -2,8 +2,6 @@ package combatlogx.expansion.cheat.prevention.listener.legacy;
 
 import java.util.Collection;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownPotion;
@@ -12,12 +10,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 
-import com.github.sirblobman.combatlogx.api.event.PlayerTagEvent;
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
+import com.github.sirblobman.combatlogx.api.event.PlayerTagEvent;
 
 import combatlogx.expansion.cheat.prevention.ICheatPreventionExpansion;
 import combatlogx.expansion.cheat.prevention.configuration.IPotionConfiguration;
@@ -81,8 +79,7 @@ public final class ListenerLegacyPotions extends CheatPreventionListener {
             return;
         }
 
-        Potion potion = Potion.fromItemStack(item);
-        Collection<PotionEffect> potionEffectCollection = potion.getEffects();
+        Collection<PotionEffect> potionEffectCollection = getPotionEffects(item);
         for (PotionEffect potionEffect : potionEffectCollection) {
             PotionEffectType potionEffectType = potionEffect.getType();
             if (isBlocked(potionEffectType)) {
@@ -90,6 +87,19 @@ public final class ListenerLegacyPotions extends CheatPreventionListener {
                 return;
             }
         }
+    }
+
+    private @NotNull Collection<PotionEffect> getPotionEffects(@NotNull ItemStack item) {
+        if (!(item.getItemMeta() instanceof org.bukkit.inventory.meta.PotionMeta potionMeta)) {
+            return java.util.Collections.emptyList();
+        }
+
+        Collection<PotionEffect> potionEffectCollection = new java.util.ArrayList<>(potionMeta.getCustomEffects());
+        org.bukkit.potion.PotionType basePotionType = potionMeta.getBasePotionType();
+        if (basePotionType != null) {
+            potionEffectCollection.addAll(basePotionType.getPotionEffects());
+        }
+        return potionEffectCollection;
     }
 
     private @NotNull IPotionConfiguration getPotionConfiguration() {
